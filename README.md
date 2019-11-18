@@ -2,6 +2,10 @@
 
 This repo is based on another paper: https://github.com/adymaharana/ObesityDL
 
+## How to run the code:
+1. python3 download_img.py (just to get la city images, to obtain other images, load shapefiles and csv)
+2. run Models.ipynb and go to the VGG section
+
 ## Steps
 1. Obtain census tract data per city selected
 2. Obtain shapefile per city
