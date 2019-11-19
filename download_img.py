@@ -10,10 +10,10 @@ maptype = "satellite"
 size = "400x400"
 zoom = "18"
 fileformat = "png"
-city = 'lacity'
+city = 'memphis'
 datadir = './data'
 outdir = './out'
-imgdir = './data/lacity/img'
+imgdir = './data/Memphis/img'
 
 key = "AIzaSyAYAn6mrk3UtGH3l4RHi7Ih_WyD-dfOSE0"
 
@@ -21,12 +21,13 @@ key = "AIzaSyAYAn6mrk3UtGH3l4RHi7Ih_WyD-dfOSE0"
 # to extract latitude-longitude pairs for download locations.
 def getDownloadLocs(boundary_locs):
   p = []
+  print(boundary_locs)
   for l1, l2 in boundary_locs:
     tempPoint = [l1, l2]
     p.append(tempPoint)
   p = Polygon(p)
     
-  # p = Polygon([Point(l2, l1) for l1, l2 in boundary_locs])
+#   p = Polygon([Point(l2, l1) for l1, l2 in boundary_locs])
   lats = [pair[1] for pair in boundary_locs]
   lons = [pair[0] for pair in boundary_locs]
   latMin = min(lats)
@@ -37,8 +38,8 @@ def getDownloadLocs(boundary_locs):
   print(len(lats), len(lons), latMin, latMax, lonMin, lonMax)
 
   download_locs = []
-  for i in np.arange(latMin + 0.001, latMax, 0.0013):
-      for j in np.arange(lonMin + 0.001, lonMax, 0.0013):
+  for i in np.arange(lonMin + 0.001, lonMax, 0.0013):
+      for j in np.arange(latMin + 0.001, latMax, 0.0013):
           if p.contains(Point(i, j)):
               download_locs.append((i, j))
   if len(download_locs) == 0:
@@ -91,7 +92,7 @@ def writeLocations(geojsonfile, tractids):
       # 'tract2010' for Los Angeles (500 cities)
       # 'STATE' + 'COUNTY' + 'TRACT' for Los Angeles (tiger Shapefile 2010)
       # tractid = tract['properties']['tract2010']
-      tractid = tract['properties']['GEOID'] #for california_census_tracts
+      tractid = tract['properties']['GEOID']
       if tractid not in tractids:
         #   print(tractid)
           continue
@@ -103,11 +104,12 @@ def writeLocations(geojsonfile, tractids):
   for tract in filtered_shapes:
       print('*', end = ', ')
       sys.stdout.flush()
-    #   boundary_locs = tract['geometry']['coordinates'][0] # for san-antonio
-      boundary_locs = tract['geometry']['coordinates'][0][0] # for lacity
+      boundary_locs = tract['geometry']['coordinates'][0]  # for san-antonio
+    #   from IPython import embed; embed(); sys.exit(1)
+    #   boundary_locs = tract['geometry']['coordinates'][0][0] # for lacity
       # print(boundary_locs)
       boundary_locs.reverse()
-      # tractid = tract['properties']['tract2010']
+    #   tractid = tract['properties']['tract2010']
       tractid = tract['properties']['GEOID']
       locs = getDownloadLocs(boundary_locs)
       locs_by_tract[tractid] = locs
@@ -150,6 +152,7 @@ def downloadImages(locfile):
       img_path = os.path.join(imgdir, imgname)
       try:
           urllib.request.urlretrieve(img_url, img_path)
+          print('done')
       except urllib.error.HTTPError as err:
           if err.code == 404:
               print("Page not found!")
@@ -163,6 +166,7 @@ def downloadImages(locfile):
           print("Some other error happened:", err.reason)
           print(img_url)
           break
+
       print(download_count, end=' ')
       sys.stdout.flush()
 
@@ -171,7 +175,7 @@ def downloadImages(locfile):
 if __name__ == "__main__":
 
 
-  # tractids, _ = readObfile(os.path.join(datadir, city, '500_cities_' + city + '_mental_health.csv'))
+  tractids, _ = readObfile(os.path.join(datadir, city, '500_cities_Memphis_mental_health.csv'))
   # with open(os.path.join(datadir, city, 'tractids.txt'), 'r') as f:
   #     tractids_prev = [tract.strip() for tract in f.read().split()]
 
@@ -183,11 +187,12 @@ if __name__ == "__main__":
   # print(len(tracts_filtered))
   # tractids = ['06037930401']
 
-  # geojsonfile = '../data/san-antonio/mapping/Bexar_County_Census_Tracts.geojson'
+  geojsonfile = './data/Memphis/gisfiles/cb_2016_47_tract_500k.geojson'
+  #  geojsonfile = '../data/san-antonio/mapping/Bexar_County_Census_Tracts.geojson'
   # geojsonfile = '../data/lacity/california_census_tracts.geojson'
   # geojsonfile = './data/lacity/california_census_tracts.geojson'
   # geojsonfile = '../data/lacity/tigerShp/gz_2010_06_140_00_500k.json'
-  # writeLocations(geojsonfile, tractids)
+  writeLocations(geojsonfile, tractids)
 
-  locfile = os.path.join(datadir, city, 'download_' + city + '_tract_18_imgs_locs.csv')
-  downloadImages(locfile)
+#   locfile = os.path.join(datadir, 'Memphis', 'download_' + city + '_tract_18_imgs_locs.csv')
+#   downloadImages(locfile)
