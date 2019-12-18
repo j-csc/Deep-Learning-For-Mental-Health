@@ -54,6 +54,7 @@ def readObfile(obfile):
   obvalues = {}
   levelind = 0
   dataind = 0
+  tractind = 0
   with open(obfile, 'r') as f:
       obreader = csv.reader(f)
       header = next(obreader)
@@ -70,7 +71,7 @@ def readObfile(obfile):
       for row in obreader:
           if row[levelind] != 'Census Tract':
               continue
-          if row[dataind] == '':
+          if row[dataind] == '': # is NAN
               # print(row)
               continue
           tractids.append(row[tractind])
@@ -192,7 +193,7 @@ def downloadImages(locfile):
 if __name__ == "__main__":
 
 
-  tractids, _ = readObfile(os.path.join(datadir, city, '500_cities_San Antonio_mental_health.csv'))
+  # tractids, _ = readObfile(os.path.join(datadir, city, '500_cities_San Antonio_mental_health.csv'))
   # with open(os.path.join(datadir, city, 'tractids.txt'), 'r') as f:
   #     tractids_prev = [tract.strip() for tract in f.read().split()]
 
@@ -205,11 +206,11 @@ if __name__ == "__main__":
   # tractids = ['06037930401']
 
   # geojsonfile = './data/Memphis/gisfiles/cb_2016_47_tract_500k.geojson'
-  geojsonfile = './data/San Antonio/Bexar_County_Census_Tracts.geojson'
+  # geojsonfile = './data/San Antonio/Bexar_County_Census_Tracts.geojson'
   # geojsonfile = './data/Bellevue/wa_census_tracts.geojson'
   # geojsonfile = './data/lacity/california_census_tracts.geojson'
   # geojsonfile = '../data/lacity/tigerShp/gz_2010_06_140_00_500k.json'
-  writeLocations(geojsonfile, tractids)
+  # writeLocations(geojsonfile, tractids)
 
-  # locfile = os.path.join(datadir, 'Memphis', 'download_' + city + '_tract_18_imgs_locs.csv')
-  # downloadImages(locfile)
+  locfile = os.path.join(datadir, 'Memphis', 'download_' + city + '_tract_18_imgs_locs.csv')
+  downloadImages(locfile)
