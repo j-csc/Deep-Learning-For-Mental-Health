@@ -1,4 +1,7 @@
 # Deep Learning for Mental Health
+[![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/Naereen/ama)
+[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
+
 
 This repo is based on another paper: https://github.com/adymaharana/ObesityDL
 
@@ -28,3 +31,15 @@ In this paper, we adopt a novel method for the task of predicting the prevalence
 | socioeconomic_features.ipynb | Extract socioeconomic features        |
 | Download_imgs.ipynb          | Download and Extract Satellite Images |
 | Model_eval.ipynb             | Regression model results              |
+
+## Sample output
+
+*Trained on Memphis, Tested on Los Angeles:*
+
+![Mem:LA](visualization/lacity_vis.png)
+
+## Results
+
+*Multi-city performance of Gradient Boosting Regression with Multi-modal features*
+
+![Res](Final_Results.png)
